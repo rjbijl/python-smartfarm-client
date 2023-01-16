@@ -2,6 +2,7 @@ from getpass import getpass
 import json
 import requests
 
+
 class Client:
     """ SmartFarm API client
 
@@ -15,6 +16,12 @@ class Client:
     def get_devices(self) -> dict:
         return self.__do_authenticated_request('/devices')
 
+    def get_additional_data_types(self) -> dict:
+        return self.__do_authenticated_request('/additional-data-types')
+
+    def get_sensors(self) -> dict:
+        return self.__do_authenticated_request('/sensors')
+
     def get_last_sample(self, device_id: int):
         return self.__do_authenticated_request(f'/samples/device/{device_id}/last')
 
@@ -27,6 +34,9 @@ class Client:
             'Content-Type': 'application/json'
         }
         response = requests.get(self.api_url + path, headers=headers)
+        if 200 != response.status_code:
+            return False
+
         return response.json()
 
     def __do_request(self, path: str) -> dict:
