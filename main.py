@@ -2,19 +2,12 @@ from client import Client
 from sensor import Sensor
 import logging
 
+
 def main():
     logging.basicConfig(filename='pythonlog.log', encoding='utf-8', level=logging.INFO)
 
     client = Client()
-
-    sensors = {}
-    for sensor in client.get_sensors():
-        sensors[sensor['id']] = Sensor(sensor['id'], sensor['name'], sensor['units'])
-
-    for additional_data_type in client.get_additional_data_types():
-        sensors[additional_data_type['id']] = Sensor(additional_data_type['id'],
-                                                     additional_data_type['name'],
-                                                     additional_data_type['unit'])
+    sensors = client.get_all_data_sources()
 
     devices = client.get_devices()
     if not devices:
@@ -25,7 +18,7 @@ def main():
         print(f'Device: {device["name"]}')
         logging.info(device)
 
-        if not (last_sample := client.get_last_sample(device['id'])):
+        if None == (last_sample := client.get_last_sample(device['id'])):
             print('No recent data')
             print('========================')
             print()
