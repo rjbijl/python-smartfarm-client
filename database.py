@@ -38,8 +38,14 @@ class Database:
         return None
 
     def save_refresh_token(self, username: str, refresh_token: str):
-        params = {"username": username, "refresh_token": refresh_token}
-        sql = "INSERT INTO user VALUES (:username, :refresh_token)"
+        params = (username,)
+        token = self.cur.execute("SELECT refresh_token FROM user WHERE username=?", params).fetchone()
 
+        if token is not None:
+            sql = "UPDATE user SET refresh_token = :refresh_token WHERE username = :username"
+        else:
+            sql = "INSERT INTO user VALUES (:username, :refresh_token)"
+
+        params = {"username": username, "refresh_token": refresh_token}
         self.cur.execute(sql, params)
         self.con.commit()
