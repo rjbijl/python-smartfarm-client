@@ -1,12 +1,13 @@
 from client import Client
-from sensor import Sensor
+from database import Database
 import logging
 
 
 def main():
     logging.basicConfig(filename='pythonlog.log', encoding='utf-8', level=logging.INFO)
 
-    client = Client()
+    database = Database(db_path='./smartfarm.db')
+    client = Client(api_url='https://smartfarm.appsforagri.com/api', db=database)
     sensors = client.get_all_data_sources()
 
     devices = client.get_devices()
