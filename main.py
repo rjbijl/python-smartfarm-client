@@ -18,6 +18,7 @@ def main():
     for device in devices:
         print(f'Device: {device["name"]}')
         logging.info(device)
+        database.save_device(device)
 
         if None == (last_sample := client.get_last_sample(device['id'])):
             print('No recent data')
